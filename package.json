@@ -1,0 +1,21 @@
+{
+  "name": "templatevue3",
+  "version": "1.0.0",
+  "description": "创建一个vue3.0 的模版",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild --bundle index.js --format=cjs --platform=node --outfile=outfile.cjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "create-xyVue": "outfile.cjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.13.10",
+    "kolorist": "^1.5.0",
+    "minimist": "^1.2.5",
+    "prompts": "^2.4.2"
+  }
+}
