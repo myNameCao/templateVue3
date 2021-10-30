@@ -180,11 +180,11 @@ async function init() {
   const root = path.join(cwd, targetDir)
   console.log(result)
 
-  //   if (shouldOverwrite) {
-  //     emptyDir(root)
-  //   } else if (!fs.existsSync(root)) {
-  //     fs.mkdirSync(root)
-  //   }
+  if (shouldOverwrite) {
+    emptyDir(root)
+  } else if (!fs.existsSync(root)) {
+    fs.mkdirSync(root)
+  }
 
   //   console.log(`\nScaffolding project in ${root}...`)
 
