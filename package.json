@@ -1,11 +1,15 @@
 {
-  "name": "templatevue3",
+  "name": "creat_xyvue",
   "version": "1.0.0",
-  "description": "创建一个vue3.0 的模版",
-  "main": "index.js",
+  "description": "创建一个vue3.0的模版",
   "scripts": {
     "build": "esbuild --bundle index.js --format=cjs --platform=node --outfile=outfile.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myNameCao/templateVue3"
   },
   "bin": {
     "create-xyVue": "outfile.cjs"
