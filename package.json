@@ -1,0 +1,28 @@
+{
+  "name": "xyvue",
+  "version": "1.0.1",
+  "description": "创建一个自己的模版(vue)",
+  "scripts": {
+    "preinstall": "node ./scripts/checkYarn.js",
+    "build": "esbuild --bundle index.js --format=cjs --platform=node --outfile=outfile.cjs",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/myNameCao/templateVue3"
+  },
+  "bin": {
+    "create-xyVue": "outfile.cjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "esbuild": "^0.13.10",
+    "kolorist": "^1.5.0",
+    "minimist": "^1.2.5",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "husky": "^7.0.4"
+  }
+}
