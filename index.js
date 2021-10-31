@@ -9,9 +9,11 @@ import prompts from 'prompts'
 import { red, green, bold } from 'kolorist'
 
 import renderTemplate from './utils/renderTemplate.js'
-// import { postOrderDirectoryTraverse, preOrderDirectoryTraverse } from './utils/directoryTraverse.js'
-// import generateReadme from './utils/generateReadme.js'
-// import getCommand from './utils/getCommand.js'
+import {
+  postOrderDirectoryTraverse,
+  preOrderDirectoryTraverse
+} from './utils/directoryTraverse.js'
+import generateReadme from './utils/generateReadme.js'
 
 function isValidPackageName(projectName) {
   return /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(
@@ -42,6 +44,7 @@ function emptyDir(dir) {
 
 async function init() {
   const cwd = process.cwd()
+  console.log(cwd)
   // possible options:
   // --default
   // --typescript / --ts
@@ -73,6 +76,7 @@ async function init() {
     ) === 'boolean'
 
   let targetDir = argv._[0]
+
   const defaultProjectName = !targetDir ? 'vue-project' : targetDir
 
   const forceOverwrite = argv.force
@@ -178,124 +182,115 @@ async function init() {
   } = result
 
   const root = path.join(cwd, targetDir)
-  console.log(result)
 
   if (shouldOverwrite) {
     emptyDir(root)
   } else if (!fs.existsSync(root)) {
     fs.mkdirSync(root)
   }
+  console.log(`\nScaffolding project in ${root}...`)
 
-  //   console.log(`\nScaffolding project in ${root}...`)
+  const pkg = { name: packageName, version: '0.0.0' }
+  fs.writeFileSync(
+    path.resolve(root, 'package.json'),
+    JSON.stringify(pkg, null, 2)
+  )
 
-  //   const pkg = { name: packageName, version: '0.0.0' }
-  //   fs.writeFileSync(path.resolve(root, 'package.json'), JSON.stringify(pkg, null, 2))
+  // 柯理化 函数
+  const templateRoot = path.resolve(__dirname, 'template')
+  const render = function render(templateName) {
+    const templateDir = path.resolve(templateRoot, templateName)
+    renderTemplate(templateDir, root)
+  }
 
-  //   // todo:
-  //   // work around the esbuild issue that `import.meta.url` cannot be correctly transpiled
-  //   // when bundling for node and the format is cjs
-  //   // const templateRoot = new URL('./template', import.meta.url).pathname
-  //   const templateRoot = path.resolve(__dirname, 'template')
-  //   const render = function render(templateName) {
-  //     const templateDir = path.resolve(templateRoot, templateName)
-  //     renderTemplate(templateDir, root)
-  //   }
+  render('base')
 
-  //   // Render base template
-  //   render('base')
-  //   render('config/router')
-  //   render('config/vuex')
+  render('config/router')
 
-  //   // Add configs.
-  //   if (needsJsx) {
-  //     render('config/jsx')
-  //   }
-  //   if (needsTests) {
-  //     render('config/cypress')
-  //   }
-  //   if (needsTypeScript) {
-  //     render('config/typescript')
-  //   }
+  render('config/vuex')
 
-  //   // Render code template.
-  //   // prettier-ignore
-  //   const codeTemplate =
-  //     (needsTypeScript ? 'typescript-' : '') +
-  //     (needsRouter ? 'router' : 'default')
-  //   render(`code/${codeTemplate}`)
+  // Add configs.
+  if (needsJsx) {
+    render('config/jsx')
+  }
+  if (needsTests) {
+    render('config/cypress')
+  }
+  if (needsTypeScript) {
+    render('config/typescript')
+  }
+  // Render code template.
+  // prettier-ignore
+  const codeTemplate =
+      (needsTypeScript ? 'typescript-' : '') +
+      (needsRouter ? 'router' : 'default')
+  render(`code/${codeTemplate}`)
 
-  //   // Render entry file (main.js/ts).
-  //   if (needsVuex && needsRouter) {
-  //     render('entry/vuex-and-router')
-  //   } else if (needsVuex) {
-  //     render('entry/vuex')
-  //   } else if (needsRouter) {
-  //     render('entry/router')
-  //   } else {
-  //     render('entry/default')
-  //   }
+  // Render entry file (main.js/ts).
+  if (needsVuex && needsRouter) {
+    render('entry/vuex-and-router')
+  } else if (needsVuex) {
+    render('entry/vuex')
+  } else if (needsRouter) {
+    render('entry/router')
+  } else {
+    render('entry/default')
+  }
+  // Cleanup.
+  if (needsTypeScript) {
+    // rename all `.js` files to `.ts`
+    // rename jsconfig.json to tsconfig.json
+    preOrderDirectoryTraverse(
+      root,
+      () => {},
+      filepath => {
+        if (filepath.endsWith('.js')) {
+          fs.renameSync(filepath, filepath.replace(/\.js$/, '.ts'))
+        } else if (path.basename(filepath) === 'jsconfig.json') {
+          fs.renameSync(
+            filepath,
+            filepath.replace(/jsconfig\.json$/, 'tsconfig.json')
+          )
+        }
+      }
+    )
 
-  //   // Cleanup.
+    // Rename entry in `index.html`
+    const indexHtmlPath = path.resolve(root, 'index.html')
+    const indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
+    fs.writeFileSync(
+      indexHtmlPath,
+      indexHtmlContent.replace('src/main.js', 'src/main.ts')
+    )
+  }
 
-  //   if (needsTypeScript) {
-  //     // rename all `.js` files to `.ts`
-  //     // rename jsconfig.json to tsconfig.json
-  //     preOrderDirectoryTraverse(
-  //       root,
-  //       () => {},
-  //       (filepath) => {
-  //         if (filepath.endsWith('.js')) {
-  //           fs.renameSync(filepath, filepath.replace(/\.js$/, '.ts'))
-  //         } else if (path.basename(filepath) === 'jsconfig.json') {
-  //           fs.renameSync(filepath, filepath.replace(/jsconfig\.json$/, 'tsconfig.json'))
-  //         }
-  //       }
-  //     )
+  if (!needsTests) {
+    // All templates assumes the need of tests.
+    // If the user doesn't need it:
+    // rm -rf cypress **/__tests__/
+    preOrderDirectoryTraverse(
+      root,
+      dirpath => {
+        const dirname = path.basename(dirpath)
 
-  //     // Rename entry in `index.html`
-  //     const indexHtmlPath = path.resolve(root, 'index.html')
-  //     const indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
-  //     fs.writeFileSync(indexHtmlPath, indexHtmlContent.replace('src/main.js', 'src/main.ts'))
-  //   }
-
-  //   if (!needsTests) {
-  //     // All templates assumes the need of tests.
-  //     // If the user doesn't need it:
-  //     // rm -rf cypress **/__tests__/
-  //     preOrderDirectoryTraverse(
-  //       root,
-  //       (dirpath) => {
-  //         const dirname = path.basename(dirpath)
-
-  //         if (dirname === 'cypress' || dirname === '__tests__') {
-  //           emptyDir(dirpath)
-  //           fs.rmdirSync(dirpath)
-  //         }
-  //       },
-  //       () => {}
-  //     )
-  //   }
-
-  //   // Instructions:
-  //   // Supported package managers: pnpm > yarn > npm
-  //   // Note: until <https://github.com/pnpm/pnpm/issues/3505> is resolved,
-  //   // it is not possible to tell if the command is called by `pnpm init`.
-  //   const packageManager = /pnpm/.test(process.env.npm_execpath)
-  //     ? 'pnpm'
-  //     : /yarn/.test(process.env.npm_execpath)
-  //     ? 'yarn'
-  //     : 'npm'
-
-  //   // README generation
-  //   fs.writeFileSync(
-  //     path.resolve(root, 'README.md'),
-  //     generateReadme({
-  //       projectName: result.projectName || defaultProjectName,
-  //       packageManager,
-  //       needsTypeScript,
-  //       needsTests
-  //     })
-  //   )
+        if (dirname === 'cypress' || dirname === '__tests__') {
+          emptyDir(dirpath)
+          fs.rmdirSync(dirpath)
+        }
+      },
+      () => {}
+    )
+  }
+  // README generation
+  fs.writeFileSync(
+    path.resolve(root, 'README.md'),
+    generateReadme({
+      projectName: result.projectName || defaultProjectName,
+      packageManager,
+      needsTypeScript,
+      needsTests
+    })
+  )
 
   console.log(`\nDone. Now run:\n`)
   if (root !== cwd) {

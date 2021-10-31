@@ -5346,6 +5346,77 @@ var bgLightGray = kolorist(47, 49);
 var import_fs = __toModule(require("fs"));
 var import_path = __toModule(require("path"));
 
+// utils/deepMerge.js
+var isObject = (val) => val && typeof val === "object";
+var mergeArrayWithDedupe = (a, b) => Array.from(new Set([...a, ...b]));
+function deepMerge(target, obj) {
+  for (const key of Object.keys(obj)) {
+    const oldVal = target[key];
+    const newVal = obj[key];
+    if (Array.isArray(oldVal) && Array.isArray(newVal)) {
+      target[key] = mergeArrayWithDedupe(oldVal, newVal);
+    } else if (isObject(oldVal) && isObject(newVal)) {
+      target[key] = deepMerge(oldVal, newVal);
+    } else {
+      target[key] = newVal;
+    }
+  }
+  return target;
+}
+var deepMerge_default = deepMerge;
+
+// utils/sortDependencies.js
+function sortDependencies(packageJson) {
+  const sorted = {};
+  const depTypes = [
+    "dependencies",
+    "devDependencies",
+    "peerDependencies",
+    "optionalDependencies"
+  ];
+  for (const depType of depTypes) {
+    if (packageJson[depType]) {
+      sorted[depType] = {};
+      Object.keys(packageJson[depType]).sort().forEach((name) => {
+        sorted[depType][name] = packageJson[depType][name];
+      });
+    }
+  }
+  console.log(packageJson, sorted, {
+    ...packageJson,
+    ...sorted
+  });
+  return {
+    ...packageJson,
+    ...sorted
+  };
+}
+
+// utils/renderTemplate.js
+function renderTemplate(src, dest) {
+  const stats = import_fs.default.statSync(src);
+  if (stats.isDirectory()) {
+    import_fs.default.mkdirSync(dest, { recursive: true });
+    for (const file of import_fs.default.readdirSync(src)) {
+      renderTemplate(import_path.default.resolve(src, file), import_path.default.resolve(dest, file));
+    }
+    return;
+  }
+  const filename = import_path.default.basename(src);
+  if (filename === "package.json" && import_fs.default.existsSync(dest)) {
+    const existing = JSON.parse(import_fs.default.readFileSync(dest));
+    const newPackage = JSON.parse(import_fs.default.readFileSync(src));
+    const pkg = sortDependencies(deepMerge_default(existing, newPackage));
+    import_fs.default.writeFileSync(dest, JSON.stringify(pkg, null, 2) + "\n");
+    return;
+  }
+  if (filename.startsWith("_")) {
+    dest = import_path.default.resolve(import_path.default.dirname(dest), filename.replace(/^_/, "."));
+  }
+  import_fs.default.copyFileSync(src, dest);
+}
+var renderTemplate_default = renderTemplate;
+
 // index.js
 function isValidPackageName(projectName) {
   return /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(projectName);
@@ -5356,8 +5427,12 @@ function toValidPackageName(projectName) {
 function canSafelyOverwrite(dir) {
   return !import_fs2.default.existsSync(dir) || import_fs2.default.readdirSync(dir).length === 0;
 }
+function emptyDir(dir) {
+  postOrderDirectoryTraverse(dir, (dir2) => import_fs2.default.rmdirSync(dir2), (file) => import_fs2.default.unlinkSync(file));
+}
 async function init() {
   const cwd = process.cwd();
+  console.log(cwd);
   const argv = (0, import_minimist.default)(process.argv.slice(2), {
     alias: {
       typescript: ["ts"],
@@ -5447,7 +5522,72 @@ async function init() {
     needsTests = argv.tests
   } = result;
   const root = import_path2.default.join(cwd, targetDir);
-  console.log(result);
+  if (shouldOverwrite) {
+    emptyDir(root);
+  } else if (!import_fs2.default.existsSync(root)) {
+    import_fs2.default.mkdirSync(root);
+  }
+  console.log(`
+Scaffolding project in ${root}...`);
+  const pkg = { name: packageName, version: "0.0.0" };
+  import_fs2.default.writeFileSync(import_path2.default.resolve(root, "package.json"), JSON.stringify(pkg, null, 2));
+  const templateRoot = import_path2.default.resolve(__dirname, "template");
+  const render = function render2(templateName) {
+    const templateDir = import_path2.default.resolve(templateRoot, templateName);
+    renderTemplate_default(templateDir, root);
+  };
+  render("base");
+  render("config/router");
+  render("config/vuex");
+  if (needsJsx) {
+    render("config/jsx");
+  }
+  if (needsTests) {
+    render("config/cypress");
+  }
+  if (needsTypeScript) {
+    render("config/typescript");
+  }
+  const codeTemplate = (needsTypeScript ? "typescript-" : "") + (needsRouter ? "router" : "default");
+  render(`code/${codeTemplate}`);
+  if (needsVuex && needsRouter) {
+    render("entry/vuex-and-router");
+  } else if (needsVuex) {
+    render("entry/vuex");
+  } else if (needsRouter) {
+    render("entry/router");
+  } else {
+    render("entry/default");
+  }
+  if (needsTypeScript) {
+    preOrderDirectoryTraverse(root, () => {
+    }, (filepath) => {
+      if (filepath.endsWith(".js")) {
+        import_fs2.default.renameSync(filepath, filepath.replace(/\.js$/, ".ts"));
+      } else if (import_path2.default.basename(filepath) === "jsconfig.json") {
+        import_fs2.default.renameSync(filepath, filepath.replace(/jsconfig\.json$/, "tsconfig.json"));
+      }
+    });
+    const indexHtmlPath = import_path2.default.resolve(root, "index.html");
+    const indexHtmlContent = import_fs2.default.readFileSync(indexHtmlPath, "utf8");
+    import_fs2.default.writeFileSync(indexHtmlPath, indexHtmlContent.replace("src/main.js", "src/main.ts"));
+  }
+  if (!needsTests) {
+    preOrderDirectoryTraverse(root, (dirpath) => {
+      const dirname = import_path2.default.basename(dirpath);
+      if (dirname === "cypress" || dirname === "__tests__") {
+        emptyDir(dirpath);
+        import_fs2.default.rmdirSync(dirpath);
+      }
+    }, () => {
+    });
+  }
+  import_fs2.default.writeFileSync(import_path2.default.resolve(root, "README.md"), generateReadme({
+    projectName: result.projectName || defaultProjectName,
+    packageManager,
+    needsTypeScript,
+    needsTests
+  }));
   console.log(`
 Done. Now run:
 `);
