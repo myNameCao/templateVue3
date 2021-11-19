@@ -3,11 +3,11 @@
 ## Script
 
 ```js
- npm init @hefei/xyvue
-
+ npm init @hefei/chris_vue@next
 ```
 
 发包
+
 npm publish
 
 下载 yarn 限制

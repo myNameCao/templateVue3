@@ -1,6 +1,6 @@
 {
-  "name": "xyvue",
-  "version": "1.0.2",
+  "name": "create-chris_vue",
+  "version": "1.0.0",
   "description": "创建 vue3.0 模版",
   "keywords": [
     "vue3.0",
@@ -16,7 +16,7 @@
     "url": "git+https://github.com/myNameCao/templateVue3"
   },
   "bin": {
-    "create-xyvue": "outfile.cjs"
+    "create-chris_vue": "outfile.cjs"
   },
   "author": "",
   "license": "ISC",
