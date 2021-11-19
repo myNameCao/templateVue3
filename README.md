@@ -4,6 +4,12 @@
 
 ```js
 
- npm init chris_vue@next
+ npm init chris_vue@latest
 
+```
+
+## 发布
+
+```shell
+npm publish 或   npm publish --tag <tagName>
 ```
