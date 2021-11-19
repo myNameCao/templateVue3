@@ -205,82 +205,82 @@ async function init() {
 
   render('base')
 
-  render('config/router')
+  // render('config/router')
 
-  render('config/vuex')
+  // render('config/vuex')
 
   // Add configs.
-  if (needsJsx) {
-    render('config/jsx')
-  }
-  if (needsTests) {
-    render('config/cypress')
-  }
-  if (needsTypeScript) {
-    render('config/typescript')
-  }
+  // if (needsJsx) {
+  //   render('config/jsx')
+  // }
+  // if (needsTests) {
+  //   render('config/cypress')
+  // }
+  // if (needsTypeScript) {
+  //   render('config/typescript')
+  // }
   // Render code template.
   // prettier-ignore
-  const codeTemplate =
-      (needsTypeScript ? 'typescript-' : '') +
-      (needsRouter ? 'router' : 'default')
-  render(`code/${codeTemplate}`)
+  // const codeTemplate =
+  //     (needsTypeScript ? 'typescript-' : '') +
+  //     (needsRouter ? 'router' : 'default')
+  // render(`code/${codeTemplate}`)
 
-  // Render entry file (main.js/ts).
-  if (needsVuex && needsRouter) {
-    render('entry/vuex-and-router')
-  } else if (needsVuex) {
-    render('entry/vuex')
-  } else if (needsRouter) {
-    render('entry/router')
-  } else {
-    render('entry/default')
-  }
-  // Cleanup.
-  if (needsTypeScript) {
-    // rename all `.js` files to `.ts`
-    // rename jsconfig.json to tsconfig.json
-    preOrderDirectoryTraverse(
-      root,
-      () => {},
-      filepath => {
-        if (filepath.endsWith('.js')) {
-          fs.renameSync(filepath, filepath.replace(/\.js$/, '.ts'))
-        } else if (path.basename(filepath) === 'jsconfig.json') {
-          fs.renameSync(
-            filepath,
-            filepath.replace(/jsconfig\.json$/, 'tsconfig.json')
-          )
-        }
-      }
-    )
+  // // Render entry file (main.js/ts).
+  // if (needsVuex && needsRouter) {
+  //   render('entry/vuex-and-router')
+  // } else if (needsVuex) {
+  //   render('entry/vuex')
+  // } else if (needsRouter) {
+  //   render('entry/router')
+  // } else {
+  //   render('entry/default')
+  // }
+  // // Cleanup.
+  // if (needsTypeScript) {
+  //   // rename all `.js` files to `.ts`
+  //   // rename jsconfig.json to tsconfig.json
+  //   preOrderDirectoryTraverse(
+  //     root,
+  //     () => {},
+  //     filepath => {
+  //       if (filepath.endsWith('.js')) {
+  //         fs.renameSync(filepath, filepath.replace(/\.js$/, '.ts'))
+  //       } else if (path.basename(filepath) === 'jsconfig.json') {
+  //         fs.renameSync(
+  //           filepath,
+  //           filepath.replace(/jsconfig\.json$/, 'tsconfig.json')
+  //         )
+  //       }
+  //     }
+  //   )
 
-    // Rename entry in `index.html`
-    const indexHtmlPath = path.resolve(root, 'index.html')
-    const indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
-    fs.writeFileSync(
-      indexHtmlPath,
-      indexHtmlContent.replace('src/main.js', 'src/main.ts')
-    )
-  }
+  //   // Rename entry in `index.html`
+  //   const indexHtmlPath = path.resolve(root, 'index.html')
+  //   const indexHtmlContent = fs.readFileSync(indexHtmlPath, 'utf8')
+  //   fs.writeFileSync(
+  //     indexHtmlPath,
+  //     indexHtmlContent.replace('src/main.js', 'src/main.ts')
+  //   )
+  // }
 
-  if (!needsTests) {
-    // All templates assumes the need of tests.
-    // If the user doesn't need it:
-    // rm -rf cypress **/__tests__/
-    preOrderDirectoryTraverse(
-      root,
-      dirpath => {
-        const dirname = path.basename(dirpath)
+  // if (!needsTests) {
+  //   // All templates assumes the need of tests.
+  //   // If the user doesn't need it:
+  //   // rm -rf cypress **/__tests__/
+  //   preOrderDirectoryTraverse(
+  //     root,
+  //     dirpath => {
+  //       const dirname = path.basename(dirpath)
 
-        if (dirname === 'cypress' || dirname === '__tests__') {
-          emptyDir(dirpath)
-          fs.rmdirSync(dirpath)
-        }
-      },
-      () => {}
-    )
-  }
+  //       if (dirname === 'cypress' || dirname === '__tests__') {
+  //         emptyDir(dirpath)
+  //         fs.rmdirSync(dirpath)
+  //       }
+  //     },
+  //     () => {}
+  //   )
+  // }
   // README generation
   fs.writeFileSync(
     path.resolve(root, 'README.md'),
