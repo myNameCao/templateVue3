@@ -1,13 +1,9 @@
-# vue3.0 的创建模版
+# vue3.0 typescript 创建模版
 
 ## Script
 
 ```js
- npm init @hefei/chris_vue@next
+
+ npm init chris_vue@next
+
 ```
-
-发包
-
-npm publish
-
-下载 yarn 限制
