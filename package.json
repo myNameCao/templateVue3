@@ -1,7 +1,12 @@
 {
   "name": "xyvue",
-  "version": "1.0.1",
-  "description": "创建一个自己的模版(vue)",
+  "version": "1.0.2",
+  "description": "创建 vue3.0 模版",
+  "keywords": [
+    "vue3.0",
+    "typescript",
+    "qiankun"
+  ],
   "scripts": {
     "preinstall": "node ./scripts/checkYarn.js",
     "build": "esbuild --bundle index.js --format=cjs --platform=node --outfile=outfile.cjs",
@@ -12,7 +17,7 @@
     "url": "git+https://github.com/myNameCao/templateVue3"
   },
   "bin": {
-    "create-xyVue": "outfile.cjs"
+    "create-xyvue": "outfile.cjs"
   },
   "author": "",
   "license": "ISC",

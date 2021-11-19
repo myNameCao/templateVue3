@@ -5255,8 +5255,8 @@ var require_prompts3 = __commonJS({
 });
 
 // index.js
-var import_fs2 = __toModule(require("fs"));
-var import_path2 = __toModule(require("path"));
+var import_fs4 = __toModule(require("fs"));
+var import_path3 = __toModule(require("path"));
 var import_minimist = __toModule(require_minimist());
 var import_prompts = __toModule(require_prompts3());
 
@@ -5382,10 +5382,6 @@ function sortDependencies(packageJson) {
       });
     }
   }
-  console.log(packageJson, sorted, {
-    ...packageJson,
-    ...sorted
-  });
   return {
     ...packageJson,
     ...sorted
@@ -5417,6 +5413,90 @@ function renderTemplate(src, dest) {
 }
 var renderTemplate_default = renderTemplate;
 
+// utils/directoryTraverse.js
+var import_fs2 = __toModule(require("fs"));
+var import_path2 = __toModule(require("path"));
+function postOrderDirectoryTraverse(dir, dirCallback, fileCallback) {
+  for (const filename of import_fs2.default.readdirSync(dir)) {
+    const fullpath = import_path2.default.resolve(dir, filename);
+    if (import_fs2.default.lstatSync(fullpath).isDirectory()) {
+      postOrderDirectoryTraverse(fullpath, dirCallback, fileCallback);
+      dirCallback(fullpath);
+      continue;
+    }
+    fileCallback(fullpath);
+  }
+}
+
+// utils/generateReadme.js
+var import_fs3 = __toModule(require("fs"));
+
+// utils/getCommand.js
+function getCommand(packageManager, scriptName) {
+  if (scriptName === "install") {
+    return packageManager === "yarn" ? "yarn" : `${packageManager} install`;
+  }
+  return packageManager === "npm" ? `npm run ${scriptName}` : `${packageManager} ${scriptName}`;
+}
+
+// utils/generateReadme.js
+var sfcTypeSupportDoc = "\n## Type Support for `.vue` Imports in TS\n\nSince TypeScript cannot handle type information for `.vue` imports, they are shimmed to be a generic Vue component type by default. In most cases this is fine if you don't really care about component prop types outside of templates.\n\nHowever, if you wish to get actual prop types in `.vue` imports (for example to get props validation when using manual `h(...)` calls), you can run `Volar: Switch TS Plugin on/off` from VSCode command palette.\n";
+function generateReadme({
+  projectName,
+  packageManager,
+  needsTypeScript,
+  needsTests
+}) {
+  let readme = `# ${projectName}
+
+This template should help get you started developing with Vue 3 in Vite.
+
+## Recommended IDE Setup
+
+[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar) (and disable Vetur).
+${needsTypeScript ? sfcTypeSupportDoc : ""}
+## Customize configuration
+
+See [Vite Configuration Reference](https://vitejs.dev/config/).
+
+## Project Setup
+
+`;
+  let npmScriptsDescriptions = `\`\`\`sh
+${getCommand(packageManager, "install")}
+\`\`\`
+
+### Compile and Hot-Reload for Development
+
+\`\`\`sh
+${getCommand(packageManager, "dev")}
+\`\`\`
+
+### ${needsTypeScript ? "Type-Check, " : ""}Compile and Minify for Production
+
+\`\`\`sh
+${getCommand(packageManager, "build")}
+\`\`\`
+`;
+  if (needsTests) {
+    npmScriptsDescriptions += `
+### Run Unit Tests with [Cypress Component Testing](https://docs.cypress.io/guides/component-testing/introduction)
+
+\`\`\`sh
+${getCommand(packageManager, "test:unit")} # or \`${getCommand(packageManager, "test:unit:ci")}\` for headless testing
+\`\`\`
+
+### Run End-to-End Tests with [Cypress](https://www.cypress.io/)
+
+\`\`\`sh
+${getCommand(packageManager, "test:e2e")} # or \`${getCommand(packageManager, "test:e2e:ci")}\` for headless testing
+\`\`\`
+`;
+  }
+  readme += npmScriptsDescriptions;
+  return readme;
+}
+
 // index.js
 function isValidPackageName(projectName) {
   return /^(?:@[a-z0-9-*~][a-z0-9-*._~]*\/)?[a-z0-9-~][a-z0-9-._~]*$/.test(projectName);
@@ -5425,10 +5505,10 @@ function toValidPackageName(projectName) {
   return projectName.trim().toLowerCase().replace(/\s+/g, "-").replace(/^[._]/, "").replace(/[^a-z0-9-~]+/g, "-");
 }
 function canSafelyOverwrite(dir) {
-  return !import_fs2.default.existsSync(dir) || import_fs2.default.readdirSync(dir).length === 0;
+  return !import_fs4.default.existsSync(dir) || import_fs4.default.readdirSync(dir).length === 0;
 }
 function emptyDir(dir) {
-  postOrderDirectoryTraverse(dir, (dir2) => import_fs2.default.rmdirSync(dir2), (file) => import_fs2.default.unlinkSync(file));
+  postOrderDirectoryTraverse(dir, (dir2) => import_fs4.default.rmdirSync(dir2), (file) => import_fs4.default.unlinkSync(file));
 }
 async function init() {
   const cwd = process.cwd();
@@ -5521,78 +5601,30 @@ async function init() {
     needsVuex = argv.vuex,
     needsTests = argv.tests
   } = result;
-  const root = import_path2.default.join(cwd, targetDir);
+  const root = import_path3.default.join(cwd, targetDir);
   if (shouldOverwrite) {
     emptyDir(root);
-  } else if (!import_fs2.default.existsSync(root)) {
-    import_fs2.default.mkdirSync(root);
+  } else if (!import_fs4.default.existsSync(root)) {
+    import_fs4.default.mkdirSync(root);
   }
   console.log(`
 Scaffolding project in ${root}...`);
   const pkg = { name: packageName, version: "0.0.0" };
-  import_fs2.default.writeFileSync(import_path2.default.resolve(root, "package.json"), JSON.stringify(pkg, null, 2));
-  const templateRoot = import_path2.default.resolve(__dirname, "template");
+  import_fs4.default.writeFileSync(import_path3.default.resolve(root, "package.json"), JSON.stringify(pkg, null, 2));
+  const templateRoot = import_path3.default.resolve(__dirname, "template");
   const render = function render2(templateName) {
-    const templateDir = import_path2.default.resolve(templateRoot, templateName);
+    const templateDir = import_path3.default.resolve(templateRoot, templateName);
     renderTemplate_default(templateDir, root);
   };
   render("base");
-  render("config/router");
-  render("config/vuex");
-  if (needsJsx) {
-    render("config/jsx");
-  }
-  if (needsTests) {
-    render("config/cypress");
-  }
-  if (needsTypeScript) {
-    render("config/typescript");
-  }
-  const codeTemplate = (needsTypeScript ? "typescript-" : "") + (needsRouter ? "router" : "default");
-  render(`code/${codeTemplate}`);
-  if (needsVuex && needsRouter) {
-    render("entry/vuex-and-router");
-  } else if (needsVuex) {
-    render("entry/vuex");
-  } else if (needsRouter) {
-    render("entry/router");
-  } else {
-    render("entry/default");
-  }
-  if (needsTypeScript) {
-    preOrderDirectoryTraverse(root, () => {
-    }, (filepath) => {
-      if (filepath.endsWith(".js")) {
-        import_fs2.default.renameSync(filepath, filepath.replace(/\.js$/, ".ts"));
-      } else if (import_path2.default.basename(filepath) === "jsconfig.json") {
-        import_fs2.default.renameSync(filepath, filepath.replace(/jsconfig\.json$/, "tsconfig.json"));
-      }
-    });
-    const indexHtmlPath = import_path2.default.resolve(root, "index.html");
-    const indexHtmlContent = import_fs2.default.readFileSync(indexHtmlPath, "utf8");
-    import_fs2.default.writeFileSync(indexHtmlPath, indexHtmlContent.replace("src/main.js", "src/main.ts"));
-  }
-  if (!needsTests) {
-    preOrderDirectoryTraverse(root, (dirpath) => {
-      const dirname = import_path2.default.basename(dirpath);
-      if (dirname === "cypress" || dirname === "__tests__") {
-        emptyDir(dirpath);
-        import_fs2.default.rmdirSync(dirpath);
-      }
-    }, () => {
-    });
-  }
-  import_fs2.default.writeFileSync(import_path2.default.resolve(root, "README.md"), generateReadme({
-    projectName: result.projectName || defaultProjectName,
-    packageManager,
-    needsTypeScript,
-    needsTests
+  import_fs4.default.writeFileSync(import_path3.default.resolve(root, "README.md"), generateReadme({
+    projectName: result.projectName || defaultProjectName
   }));
   console.log(`
 Done. Now run:
 `);
   if (root !== cwd) {
-    console.log(`  ${bold(green(`cd ${import_path2.default.relative(cwd, root)}`))}`);
+    console.log(`  ${bold(green(`cd ${import_path3.default.relative(cwd, root)}`))}`);
   }
   console.log(`  ${bold(green("yarn install"))}`);
   console.log(`  ${bold(green("yarn dev"))}`);

@@ -286,9 +286,9 @@ async function init() {
     path.resolve(root, 'README.md'),
     generateReadme({
       projectName: result.projectName || defaultProjectName,
-      packageManager,
-      needsTypeScript,
-      needsTests
+      // packageManager,
+      // needsTypeScript,
+      // needsTests
     })
   )
 

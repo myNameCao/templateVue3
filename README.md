@@ -6,4 +6,7 @@
  npm init @hefei/xyvue
 ```
 
+发包
+npm publish
+
 下载 yarn 限制
