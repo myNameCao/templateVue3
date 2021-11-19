@@ -4,6 +4,7 @@
 
 ```js
  npm init @hefei/xyvue
+
 ```
 
 发包

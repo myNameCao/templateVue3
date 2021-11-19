@@ -8,7 +8,6 @@
     "qiankun"
   ],
   "scripts": {
-    "preinstall": "node ./scripts/checkYarn.js",
     "build": "esbuild --bundle index.js --format=cjs --platform=node --outfile=outfile.cjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
