@@ -1,14 +1,17 @@
 import Cookies from 'js-cookie'
-import baseApi from '@lib/api'
+import baseApi, { serverApi } from '@lib/api'
 // import { AxiosResponse } from 'axios'
 import Toast, { loading, clearTip } from '@/utils/xyui'
+// import { serverApi } from '@lib/api'
 import errorHander from './errorHander'
 
 const list: number[] = []
 // Add a request interceptor
+
 export const requestSuccess = (res: any) => {
-  // 添加默认参数
-  const { host, path } = baseApi[res.host || 'defaulteApi']
+  //TODO  添加默认参数
+  const hostStr: keyof serverApi = res.host
+  const { host, path } = baseApi[hostStr || 'defaulteApi']
   const newRes = {
     ...res,
     method: res.method || 'GET',

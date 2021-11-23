@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
+import { serverApi } from '@lib/api'
 
 import {
   requestSuccess,
@@ -46,7 +47,7 @@ interface defaultOption {
     [header: string]: string
   }
   responseType?: ResponseType
-  host?: string
+  host?: keyof serverApi
   token?: string | false
   loading?: boolean
   noTip?: boolean
@@ -69,7 +70,7 @@ interface postOption extends defaultOption {
     [data: string]: any
   }
 }
-type httpServerOptions = getOption | postOption
+export type httpServerOptions = getOption | postOption
 
 // 站点统一的配置
 const instance = axios.create({

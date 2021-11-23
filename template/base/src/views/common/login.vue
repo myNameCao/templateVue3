@@ -63,7 +63,6 @@
         font-size: 28px;
         font-weight: 550;
         color: #333333;
-        background: url('../../assets/img/checkoutshoole.png');
         background-size: 480px 122px;
         background-repeat: no-repeat;
         text-align: center;
@@ -98,166 +97,77 @@
   .wrap {
     width: 100%;
     height: 100%;
-    background: url('../../assets/img/bg.png') no-repeat;
     background-size: cover;
     position: relative;
-    ::v-deep .tishiError {
-      position: absolute;
-      width: 336px;
-      height: 32px;
-      top: 78px;
-      display: flex;
-      align-items: center;
-      .ant-alert-icon {
-        top: 9px;
+  }
+  .loginBox {
+    height: 420px;
+    width: 400px;
+    padding: 32px;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0px 6px 20px 0px #2088e6;
+    position: absolute;
+    top: 23%;
+    right: 18%;
+    .logo {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 42px;
+      margin-left: -6px;
+      img {
+        display: inline-block;
+        width: 129px;
+        height: 38px;
       }
     }
-    .loginBox {
-      height: 420px;
-      width: 400px;
-      padding: 32px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0px 6px 20px 0px #2088e6;
-      position: absolute;
-      top: 23%;
-      right: 18%;
-      .logo {
-        width: 100%;
-        text-align: center;
-        margin-bottom: 42px;
-        margin-left: -6px;
-        img {
+    .logoData {
+      .zh {
+        height: 80px;
+        position: relative;
+        span {
           display: inline-block;
-          width: 129px;
-          height: 38px;
+          width: 100%;
+          color: #ffbf00;
+          text-align: right;
         }
       }
-      .logoData {
-        box-sizing: border-box;
-        // margin-bottom: 40px;
-        p {
+    }
+    .bottomBtn {
+      width: 100%;
+      button {
+        width: 100%;
+        height: 40px;
+        background: #0080ff;
+        font-size: 16px;
+        font-family: PingFangSC, PingFangSC-Regular;
+        font-weight: 400;
+        color: #ffffff;
+        margin-bottom: 20px;
+      }
+      .play {
+        display: flex;
+        justify-content: space-between;
+        span:first-child {
           font-size: 14px;
           font-family: PingFangSC, PingFangSC-Regular;
           font-weight: 400;
-          color: #888888;
-          margin-bottom: 6px;
+          color: #0080ff;
+          cursor: pointer;
         }
-        ::v-deep .ant-input {
-          border: none;
-          border-bottom: 1px solid #ccc;
-          border-radius: 0;
-          padding: 0;
-          // font-size: 16px;
-          font-family: PingFangSC, PingFangSC-Medium;
-          font-weight: 500;
-          color: #333333;
-          text-align: left;
-        }
-        ::v-deep .ant-input:focus {
-          // font-size: 16px;
-          // border-bottom-color: #0080ff;
-          border-right-width: 1px !important;
-          outline: 0;
-          box-shadow: none;
-        }
-        .zh {
-          height: 80px;
-          position: relative;
-          span {
-            display: inline-block;
-            width: 100%;
-            color: #ffbf00;
-            text-align: right;
-          }
-        }
-        .mm {
-          height: 100px;
-          position: relative;
-          // .emmm {
-          //   position: absolute;
-          //   top: 50px;
-          // }
-          span {
-            display: inline-block;
-            width: 100%;
-            height: 36px;
-            line-height: 30px;
-            color: #ffbf00;
-            text-align: right;
-          }
-        }
-      }
-      .bottomBtn {
-        width: 100%;
-        button {
-          width: 100%;
-          height: 40px;
-          background: #0080ff;
-          font-size: 16px;
-          font-family: PingFangSC, PingFangSC-Regular;
-          font-weight: 400;
-          color: #ffffff;
-          margin-bottom: 20px;
-        }
-        .play {
-          display: flex;
-          justify-content: space-between;
-          span:first-child {
-            font-size: 14px;
-            font-family: PingFangSC, PingFangSC-Regular;
-            font-weight: 400;
-            color: #0080ff;
-            cursor: pointer;
-          }
-          span:last-child {
-            color: none;
-            cursor: pointer;
-          }
+        span:last-child {
+          color: none;
+          cursor: pointer;
         }
       }
     }
-  }
-  ::v-deep .commonCss {
-    border-bottom-color: #ffbf00 !important;
-  }
-  ::v-deep .commonCss1 {
-    margin: 0;
-    height: 2px;
-    border: none;
-    background-color: #0080ff;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-top: -1px;
-    bottom: 20px;
-    transform: scaleX(0);
-    transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1),
-      -webkit-transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  ::v-deep .em2 {
-    margin: 0;
-    height: 2px;
-    border: none;
-    background-color: #0080ff;
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-top: -1px;
-    bottom: 40px;
-    transform: scaleX(0);
-    transition: transform 0.45s cubic-bezier(0.23, 1, 0.32, 1),
-      -webkit-transform 0.45s cubic-bezier(0.23, 1, 0.32, 1);
-  }
-  ::v-deep .commonCss2 {
-    transform: scaleX(1);
-  }
 
-  .baselogo {
-    position: absolute;
-    bottom: 0;
-    text-align: center;
-    width: 100%;
-    color: white;
+    .baselogo {
+      position: absolute;
+      bottom: 0;
+      text-align: center;
+      width: 100%;
+      color: white;
+    }
   }
 </style>
