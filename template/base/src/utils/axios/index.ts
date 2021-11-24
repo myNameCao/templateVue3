@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios'
-import { serverApi } from '@lib/api'
+import api from '@lib/api'
 
 import {
   requestSuccess,
@@ -8,25 +8,18 @@ import {
   responseFail
 } from '@conf/index'
 
-export interface HttpResponse {
+// 返回参数 格式
+export interface HttpResponse extends AxiosResponse {
   status: number
-  msg: string
-  data: {
-    code: number
-    desc: string
-    [key: string]: any
-  }
+  msg?: string
+  data: any
 }
 
 // 暂时的方式
-
 enum Method {
   GET = 'GET',
   POST = 'POST'
 }
-
-// export type Method = 'GET' | 'POST'
-
 // 文件的类型
 export type ResponseType =
   | 'arraybuffer'
@@ -37,7 +30,7 @@ export type ResponseType =
   | 'stream'
 
 interface fun {
-  (res: AxiosResponse): void
+  (res: HttpResponse): void
 }
 
 // 默认参数
@@ -47,7 +40,7 @@ interface defaultOption {
     [header: string]: string
   }
   responseType?: ResponseType
-  host?: keyof serverApi
+  host?: keyof typeof api
   token?: string | false
   loading?: boolean
   noTip?: boolean
@@ -70,7 +63,7 @@ interface postOption extends defaultOption {
     [data: string]: any
   }
 }
-export type httpServerOptions = getOption | postOption
+export type httpServerOptions = postOption | getOption
 
 // 站点统一的配置
 const instance = axios.create({

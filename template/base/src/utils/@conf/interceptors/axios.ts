@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import baseApi, { serverApi } from '@lib/api'
+import baseApi from '@lib/api'
 // import { AxiosResponse } from 'axios'
 import Toast, { loading, clearTip } from '@/utils/xyui'
 // import { serverApi } from '@lib/api'
@@ -10,8 +10,7 @@ const list: number[] = []
 
 export const requestSuccess = (res: any) => {
   //TODO  添加默认参数
-  const hostStr: keyof serverApi = res.host
-  const { host, path } = baseApi[hostStr || 'defaulteApi']
+  const { host, path } = baseApi[res.host || 'defaulteApi']
   const newRes = {
     ...res,
     method: res.method || 'GET',
