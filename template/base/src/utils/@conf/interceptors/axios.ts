@@ -2,7 +2,6 @@ import Cookies from 'js-cookie'
 import baseApi from '@lib/api'
 // import { AxiosResponse } from 'axios'
 import Toast, { loading, clearTip } from '@/utils/xyui'
-// import { serverApi } from '@lib/api'
 import errorHander from './errorHander'
 
 const list: number[] = []

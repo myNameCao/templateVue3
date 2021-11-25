@@ -14,7 +14,6 @@ export interface HttpResponse extends AxiosResponse {
   msg?: string
   data: any
 }
-
 // 暂时的方式
 enum Method {
   GET = 'GET',
