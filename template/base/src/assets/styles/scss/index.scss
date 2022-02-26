@@ -1,0 +1,81 @@
+@import './default';
+@import './mixin';
+
+// 行省略号 1,2,3
+
+@for $i from 1 through 3 {
+  .ellipsis-l#{$i} {
+    @include ellipsis($i);
+  }
+}
+.card {
+  @include w(200, 4);
+}
+
+/**高控制**/
+.h100 {
+  height: 100%;
+}
+/**浮动**/
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+/**文本控制**/
+.ta-l {
+  text-align: left;
+}
+.ta-c {
+  text-align: center;
+}
+.ta-r {
+  text-align: right;
+}
+
+/**外边距控制**/
+.m-auto {
+  margin: 0 auto;
+}
+
+/** 鼠标控制 **/
+.pointer {
+  cursor: pointer;
+}
+
+/** card css */
+.card-box-shadow {
+  box-shadow: 0 1px 4px #ccc;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+/**页面内容**/
+
+.page-content {
+  padding: 12px;
+}
+
+/** 文本换行**/
+.text-break {
+  word-wrap: break-word;
+}
+/** xY轴居中 **/
+.yAuto {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.xyAuto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.br {
+  border: 1px red solid;
+  box-sizing: border-box;
+}

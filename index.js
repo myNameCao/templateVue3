@@ -198,6 +198,7 @@ async function init() {
 
   // 柯理化 函数
   const templateRoot = path.resolve(__dirname, 'template')
+
   const render = function render(templateName) {
     const templateDir = path.resolve(templateRoot, templateName)
     renderTemplate(templateDir, root)
