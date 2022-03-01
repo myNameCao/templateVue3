@@ -162,3 +162,146 @@ encrypt()
 
 setCookie()
 ```
+
+# sass
+
+- 本项目使用 sass
+
+## 主题
+
+```css
+sk-default: {
+    bg: #f7f8fb,
+    color: #888
+}
+sk-while: {
+    bg: #fff,
+    color: #888
+}
+sk-blue: {
+  bg: #409eff,
+    color: #fff
+}
+sk-mo: {
+  bg: #585756,
+  color: #fff
+}
+```
+
+```html
+// 例如:白色主题
+
+<div class="sk-while"></div>
+```
+
+## fontSize
+
+<br>
+
+```
+values: [28,26,24,22,20,18,16,14,12]
+
+fz-${val}
+
+// html 例如
+<div class="fz-10"></div>
+
+```
+
+## Margin | Padding
+
+```
+values:[6, 12, 24, 36, 48, 60, 72]
+
+keys:[pt,pr,pb,pl,mt,mr,mb,ml]
+
+${keys}-${values}
+
+//html  例如 padding-top:12px
+<div class="pt-12"></div>
+
+```
+
+## class
+
+```css
+/**高控制**/
+/** 块元素控制 **/
+.none {
+  display: none;
+}
+
+.wh100 {
+  width: 100%;
+  height: 100%;
+}
+.h100 {
+  height: 100%;
+}
+/**浮动**/
+.fl {
+  float: left;
+}
+.fr {
+  float: right;
+}
+/**文本控制**/
+.ta-l {
+  text-align: left;
+}
+.ta-c {
+  text-align: center;
+}
+.ta-r {
+  text-align: right;
+}
+
+/** 鼠标控制 **/
+.pointer {
+  cursor: pointer;
+}
+
+/** card css */
+.card-box-shadow {
+  box-shadow: 0 1px 4px #ccc;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+/**页面内容**/
+
+.page-content {
+  padding: 12px;
+}
+
+/** 文本换行**/
+.text-break {
+  word-wrap: break-word;
+}
+/**外边距控制**/
+.m-auto {
+  margin: 0 auto;
+}
+/** xY轴居中 **/
+.yAuto {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.xyAuto {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.br {
+  border: 1px red solid;
+  box-sizing: border-box;
+}
+/** 用户行为操作 **/
+.select-no {
+  user-select: none;
+}
+```
