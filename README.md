@@ -4,8 +4,7 @@
 
 ```js
 
- npm init chris_vue@next
-npm init chris_vue@latest
+  npm init chris_vue@latest
 
 ```
 
