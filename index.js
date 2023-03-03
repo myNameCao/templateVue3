@@ -298,7 +298,7 @@ async function init() {
     console.log(`  ${bold(green(`cd ${path.relative(cwd, root)}`))}`)
   }
   console.log(`  ${bold(green('yarn install'))}`)
-  console.log(`  ${bold(green('yarn dev'))}`)
+  console.log(`  ${bold(green('yarn serve'))}`)
 }
 
 init().catch(e => {
