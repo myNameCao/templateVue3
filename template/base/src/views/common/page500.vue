@@ -5,16 +5,15 @@
     </div>
   </div>
 </template>
-<script>
+<script lang="ts">
   // import axios, { setCookie } from '@utils'
   export default {
     data() {
       return {}
-    },
-    mounted() {}
+    }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .page_sigle {
     width: 100%;
     height: 100%;
@@ -26,7 +25,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #333333;
+    color: @text-color-secondary;
     text-align: center;
     .imgtip {
       width: 284px;

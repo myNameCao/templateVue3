@@ -6,7 +6,7 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .page_sigle {
     width: 100%;
     height: 100%;

@@ -79,7 +79,7 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .studentscore {
     width: 500px;
     height: 500px;

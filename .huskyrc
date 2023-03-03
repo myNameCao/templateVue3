@@ -1,6 +1,3 @@
 {
-  "hooks": {
-  "commit-msg": "node ./scripts/verifyCommit.js $HUSKY_GIT_PARAMS",
-   
-  }
+  "hooks": {}
 }

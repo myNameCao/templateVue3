@@ -13,3 +13,10 @@
     }
   })
 </script>
+
+<style lang="less" scoped>
+  .home {
+    background-color: @block_bgcolor;
+    border: @border-width-base red solid;
+  }
+</style>

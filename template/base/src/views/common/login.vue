@@ -38,7 +38,7 @@
     }
   }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .school_dia {
     position: absolute;
     top: 0;
