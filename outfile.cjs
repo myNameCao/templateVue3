@@ -5627,7 +5627,7 @@ Done. Now run:
     console.log(`  ${bold(green(`cd ${import_path3.default.relative(cwd, root)}`))}`);
   }
   console.log(`  ${bold(green("yarn install"))}`);
-  console.log(`  ${bold(green("yarn dev"))}`);
+  console.log(`  ${bold(green("yarn serve"))}`);
 }
 init().catch((e) => {
   console.error(e);
